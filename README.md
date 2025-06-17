@@ -1,31 +1,166 @@
-# shadcn/ui monorepo template
+# shadcn/ui Monorepo Starter
 
-This template is for creating a monorepo with shadcn/ui.
+A modern monorepo starter powered by [shadcn/ui](https://ui.shadcn.com/), [Next.js](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), and [Turborepo](https://turbo.build/).  
 
-## Usage
+ 🎉 This starter includes [Cursor](https://www.cursor.so/) workspace rules for best practices, structure, and development workflow. See the `.cursor/rules` directory for details.
 
-```bash
-pnpm dlx shadcn@latest init
+Everything is preconfigured—just clone and start building!
+
+
+---
+
+## Table of Contents
+
+1. [Monorepo Structure](#monorepo-structure)
+2. [Development](#development)
+3. [UI Components](#ui-components)
+4. [Styling](#styling)
+5. [Deployment](#deployment)
+6. [Best Practices](#best-practices)
+7. [Resources](#resources)
+
+---
+
+## Monorepo Structure
+
+```
+apps/
+  web/                # Main Next.js app (App Router)
+packages/
+  ui/                 # Shared UI library (shadcn/ui + Tailwind)
+  eslint-config/      # Shared ESLint config
+  typescript-config/  # Shared TypeScript config
 ```
 
-## Adding components
+- **apps/web**: Your main web application.
+- **packages/ui**: Reusable UI components, hooks, and styles.
+- **packages/eslint-config**: Centralized ESLint rules.
+- **packages/typescript-config**: Centralized TypeScript settings.
 
-To add components to your app, run the following command at the root of your `web` app:
+---
 
-```bash
-pnpm dlx shadcn@latest add button -c apps/web
-```
+## Development
 
-This will place the ui components in the `packages/ui/src/components` directory.
+1. **Install dependencies** (from the repo root):
 
-## Tailwind
+   ```bash
+   pnpm install
+   ```
 
-Your `tailwind.config.ts` and `globals.css` are already set up to use the components from the `ui` package.
+2. **Start the development server**:
 
-## Using components
+   ```bash
+   pnpm run dev
+   ```
 
-To use the components in your app, import them from the `ui` package.
+   This runs the Next.js app in `apps/web`.
 
-```tsx
-import { Button } from "@workspace/ui/components/button"
-```
+3. **Build all packages and apps**:
+
+   ```bash
+   pnpm run build
+   ```
+
+4. **Lint and type-check**:
+
+   ```bash
+   pnpm run lint
+   pnpm run check-types
+   ```
+
+---
+
+## UI Components
+
+- All shared UI lives in `packages/ui`.
+- To add a new component (e.g., `button`):
+
+  ```bash
+  pnpm dlx shadcn@latest add button -c apps/web
+  ```
+
+  This will place the component in `packages/ui/src/components`.
+
+- **Importing in your app:**
+
+  ```tsx
+  import { Button } from "@workspace/ui/components/button";
+  ```
+
+  > Replace `@workspace` with your actual monorepo scope if different.
+
+- **Tailwind CSS** is preconfigured and ready to use.
+
+---
+
+## Styling
+
+- Use Tailwind CSS utility classes for styling.
+- Shared styles and utilities are in `packages/ui/src/styles` and `packages/ui/src/lib`.
+- Use the `cn` utility for conditional class names:
+
+  ```tsx
+  import { cn } from "@workspace/ui/lib/utils";
+  ```
+
+---
+
+## Deployment
+
+You have two main options for deploying your app:
+
+### A. Deploy to Vercel (Recommended)
+
+- Use the included deploy script to deploy with Vercel:
+
+  ```bash
+  pnpm run deploy
+  ```
+  This runs the deploy script in `package.json`, which uses the Vercel CLI (`pnpx vercel`).
+
+- The main app (`apps/web`) is a standard Next.js app and works seamlessly with Vercel.
+- For Vercel:
+  - Set the root directory to `apps/web`.
+  - Ensure `pnpm install` is used for installing dependencies.
+
+### B. Manual Deployment (Any Platform)
+
+- **Build for production:**
+
+  ```bash
+  pnpm run build
+  ```
+
+- **Start the production server:**
+
+  ```bash
+  pnpm run start
+  ```
+
+- You can deploy the output to any platform that supports Next.js (e.g., Netlify, AWS, DigitalOcean, etc.).
+
+---
+
+## Best Practices
+
+- Use `packages/ui` for all shared UI.
+- Keep components modular, typed, and accessible.
+- Prefer React Server Components and Suspense for performance.
+- Use context for global state, keep state close to where it's used.
+- Test complex components with React Testing Library.
+- Follow accessibility guidelines (keyboard, ARIA, color contrast).
+
+---
+
+## Resources
+
+- [shadcn/ui Documentation](https://ui.shadcn.com/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Turborepo Documentation](https://turbo.build/repo/docs)
+- [pnpm Documentation](https://pnpm.io/)
+- [Cursor](https://www.cursor.com/en)
+
+---
+
+Feel free to customize this template to fit your project's needs!

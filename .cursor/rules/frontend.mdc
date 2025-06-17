@@ -1,0 +1,178 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Frontend Development Guidelines
+
+## 1. Overview
+
+- **Framework**: Next.js 15 (App Router) with React 19
+- **UI Library**: Custom package based on Shadcn UI + Tailwind CSS under `packages/ui` for reusable UI
+- **State Management**: React hooks/context
+
+---
+
+## 2. Project Structure
+
+```
+apps/web/         # Next.js app
+│
+├── app/          # App Router pages/layouts
+├── components/   # App-specific components
+├── hooks/        # App-specific hooks
+├── lib/          # Utilities/config
+├── providers/    # Context providers
+└── public/       # Static assets
+
+packages/ui/      # Shared UI library
+│
+├── src/
+│   ├── components/  # Reusable UI components
+│   ├── hooks/       # Custom hooks
+│   ├── lib/         # Utilities
+│   └── styles/      # Tailwind/global styles
+```
+
+---
+
+## 3. Using and Creating UI Components
+
+Whenever possible, reuse existing UI components instead of creating or styling custom new ones with tailwind.
+
+- **Importing** (in app code):
+  ```tsx
+  import { Button } from "@ui/components/button";
+  import { cn } from "@ui/lib/utils";
+  ```
+
+- **Generating with CLI**:
+  ```bash
+  cd packages/ui
+  pnpm run shadcn add [component-name]
+  ```
+
+- **Manual Component Example**:
+  ```tsx
+  // packages/ui/src/components/custom-component.tsx
+  import React from "react";
+  import { cn } from "../lib/utils";
+
+  export function CustomComponent({ className, children, ...props }) {
+    return (
+      <div className={cn("relative rounded-md border p-4", className)} {...props}>
+        {children}
+      </div>
+    );
+  }
+  ```
+
+- **Exporting**: Components are auto-exported via `package.json`:
+  ```json
+  "exports": {
+    "./components/*": "./src/components/*.tsx"
+  }
+  ```
+
+---
+
+## 4. Page & Layout Development
+
+- **New Page**:
+  ```tsx
+  // apps/web/app/dashboard/page.tsx
+  import { Suspense } from "react";
+  import { Button } from "@ui/components/button";
+
+  export default function DashboardPage() {
+    return (
+      <div className="container mx-auto py-6">
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <Suspense fallback={<div>Loading...</div>}>
+          {/* Dashboard content */}
+        </Suspense>
+        <Button>New Item</Button>
+      </div>
+    );
+  }
+  ```
+
+- **Layout Example**:
+  ```tsx
+  // apps/web/app/dashboard/layout.tsx
+  import { Sidebar } from "@ui/components/sidebar";
+
+  export default function DashboardLayout({ children }) {
+    return (
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <main className="flex-1">{children}</main>
+      </div>
+    );
+  }
+  ```
+
+---
+
+## 5. Styling
+
+- **Tailwind CSS** is used throughout.
+- Use the `cn` utility for conditional classes:
+  ```tsx
+  import { cn } from "@ui/lib/utils";
+
+  export function Button({ variant = "default", className, ...props }) {
+    return (
+      <button
+        className={cn(
+          "rounded-md px-4 py-2 font-medium",
+          {
+            "bg-blue-500 text-white hover:bg-blue-600": variant === "default",
+            "bg-red-500 text-white hover:bg-red-600": variant === "danger",
+            "bg-transparent border border-gray-300 hover:bg-gray-100": variant === "outline",
+          },
+          className
+        )}
+        {...props}
+      />
+    );
+  }
+  ```
+
+---
+
+## 6. Best Practices
+
+- **Component Design**: Small, focused, typed with interfaces, container/presentation split, use custom hooks for logic.
+- **Performance**: Prefer React Server Components, memoize with `useMemo`/`useCallback`, use `Suspense` for loading/code-splitting.
+- **State**: Use context for global, keep state close to usage, prefer local state first.
+- **Accessibility**: Keyboard access, ARIA attributes, screen reader testing, color contrast.
+- **Testing**: Unit test complex components, use React Testing Library.
+
+---
+
+## 7. Development Workflow
+
+1. Start dev server:
+   ```bash
+   pnpm run dev
+   ```
+2. Create new UI components in `packages/ui` as needed.
+3. Import and use them in the web app.
+
+---
+
+## 8. Creating a New Feature
+
+1. Plan component hierarchy.
+2. Add reusable UI to `packages/ui` if needed.
+3. Implement app-specific components in `apps/web/components`.
+4. Add routes/pages in `apps/web/app`.
+5. Connect to API as needed.
+
+---
+
+**Summary:**  
+- Use `packages/ui` for shared UI, Tailwind for styling, and Next.js App Router for pages.
+- Keep components modular, accessible, and tested.
+- Follow the outlined structure for maintainability and clarity. 

@@ -59,6 +59,8 @@ packages/
 
    ```bash
    pnpm run build
+
+   #
    ```
 
 4. **Lint and type-check**:
@@ -119,6 +121,7 @@ You have two main options for deploying your app:
   This runs the deploy script in `package.json`, which uses the Vercel CLI (`pnpx vercel`).
 
 - The main app (`apps/web`) is a standard Next.js app and works seamlessly with Vercel.
+- **Static HTML Output:** The Next.js app is configured to output static HTML using `output: "export"` in `next.config.mjs`. The build output is a static site in `apps/web/out`.
 - For Vercel:
   - Set the root directory to `apps/web`.
   - Ensure `pnpm install` is used for installing dependencies.
@@ -137,7 +140,8 @@ You have two main options for deploying your app:
   pnpm run start
   ```
 
-- You can deploy the output to any platform that supports Next.js (e.g., Netlify, AWS, DigitalOcean, etc.).
+- **Static HTML Output:** The build output is a static HTML site in `apps/web/out` (configured via `output: "export"` in `next.config.mjs`).
+- You can deploy the output to any platform that serves static sites or supports Next.js (e.g., Netlify, AWS, DigitalOcean, etc.).
 
 ---
 
